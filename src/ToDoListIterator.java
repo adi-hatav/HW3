@@ -10,7 +10,7 @@ public class ToDoListIterator implements Iterator<Task> {
 
     public ToDoListIterator(LinkedList<Task> taskSortedLinkedList, Date dueDate,int taskNumber){
         this.taskSortedLinkedList = taskSortedLinkedList;
-        this.currPlace = 1;
+        this.currPlace = 0;
         this.dueDate = dueDate;
         this.taskNumber = taskNumber;
     }
@@ -19,12 +19,12 @@ public class ToDoListIterator implements Iterator<Task> {
     public boolean hasNext() {
         if(dueDate==null)
             return currPlace!=taskNumber;
-        return currPlace!=taskNumber && taskSortedLinkedList.get(currPlace-1).getDueDate().before(dueDate);
+        return currPlace!=taskNumber && !taskSortedLinkedList.get(currPlace).getDueDate().after(dueDate);
     }
 
     @Override
     public Task next() {
-        Task returnedIndex=this.taskSortedLinkedList.get(currPlace-1);
+        Task returnedIndex=this.taskSortedLinkedList.get(currPlace);
         this.currPlace++;
         return returnedIndex;
     }

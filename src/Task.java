@@ -23,7 +23,7 @@ public class Task implements Cloneable {
 
     @Override
     public String toString() {
-        return "(" + this.description + "," + String.format("%td.%tm.%tY", date, date, date) + ")";
+        return  this.description + ", " + String.format("%td.%tm.%tY", date, date, date);
     }
 
     @Override

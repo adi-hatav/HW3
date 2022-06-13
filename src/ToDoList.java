@@ -22,28 +22,26 @@ public class ToDoList implements Cloneable,TaskIterable {
     }
 
     public void addTask(Task task) {
-        if (checkAppearance(task))
+        if (checkAppearance(task)) {
             throw new TaskAlreadyExistsException("Cannot add the task!");
+        }
         taskLinkedList.add(task);
+        taskNumber++;
         if (taskSortedLinkedList.isEmpty()) {
             taskSortedLinkedList.add(task);
-            taskNumber++;
         } else {
             int i = 0;
             for (Task tempTask : this.taskSortedLinkedList) {
                 if (task.getDueDate().after(tempTask.getDueDate())) {
                     i++;
-                    continue;
                 }
-                if (task.getDueDate().equals(tempTask.getDueDate()) &&
-                        task.getDescription().compareTo(tempTask.getDescription()) < 0) {
+                else if (task.getDueDate().equals(tempTask.getDueDate()) &&
+                        task.getDescription().compareTo(tempTask.getDescription()) > 0) {
                     i++;
-                    continue;
                 }
-                taskSortedLinkedList.add(i + 1, task);
-                taskNumber++;
-                break;
             }
+                taskSortedLinkedList.add(i , task);
+
         }
     }
 
@@ -58,16 +56,21 @@ public class ToDoList implements Cloneable,TaskIterable {
     @Override
     public String toString() {
         String returnedString = "[";
-        int i = 1;
-
-        for (Task tempTask : this.taskLinkedList) {
-            if (i < taskNumber) {
-                returnedString = returnedString.concat(tempTask.toString());
-                returnedString = returnedString.concat(", ");
-                i++;
+        int i = 0;
+        if (taskNumber >0) {
+            for (Task tempTask : this.taskLinkedList) {
+                if (i < taskNumber - 1) {
+                    returnedString = returnedString.concat("(");
+                    returnedString = returnedString.concat(tempTask.toString());
+                    returnedString = returnedString.concat(")");
+                    returnedString = returnedString.concat(", ");
+                    i++;
+                }
             }
+            returnedString = returnedString.concat("(");
+            returnedString = returnedString.concat(this.taskLinkedList.get(taskNumber - 1).toString());
+            returnedString = returnedString.concat(")");
         }
-        returnedString = returnedString.concat(this.taskLinkedList.get(taskNumber).toString());
         returnedString = returnedString.concat("]");
         return returnedString;
     }
@@ -76,11 +79,13 @@ public class ToDoList implements Cloneable,TaskIterable {
     public ToDoList clone() {
         try {
             ToDoList newToDoList = (ToDoList) super.clone();
+            newToDoList.taskNumber=0;
             newToDoList.taskLinkedList = new LinkedList<>();
             newToDoList.taskSortedLinkedList = new LinkedList<>();
             for (int i = 0; i < taskNumber; i++) {
                 newToDoList.taskLinkedList.add(this.taskLinkedList.get(i).clone());
                 newToDoList.taskSortedLinkedList.add(this.taskSortedLinkedList.get(i).clone());
+                newToDoList.taskNumber++;
             }
             return newToDoList;
 
@@ -95,9 +100,16 @@ public class ToDoList implements Cloneable,TaskIterable {
             return false;
         if (((ToDoList) otherToDoList).getTaskNumber() != this.taskNumber)
             return false;
-        for (int i = 0; i < this.taskNumber; i++)
-            if (!this.taskLinkedList.get(i).equals(((ToDoList) otherToDoList).taskLinkedList.get(i)))
-                return false;
+        boolean exists;
+        for (int i = 0; i < this.taskNumber; i++) {
+            exists = false;
+            for (int j = 0; j < this.taskNumber; j++)
+                if (this.taskLinkedList.get(i).equals(((ToDoList) otherToDoList).taskLinkedList.get(j))) {
+                    exists = true;
+                    break;
+                }
+            if (!exists) return false;
+        }
         return true;
     }
 
