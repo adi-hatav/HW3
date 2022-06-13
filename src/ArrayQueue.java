@@ -1,6 +1,11 @@
 import java.util.Iterator;
 import java.lang.reflect.*;
 
+/**
+ * Represents queue that is realized by array according to given criterion in task.
+ *
+ * @param <E> generic element extends cloneable
+ */
 public class ArrayQueue<E extends Cloneable> implements Queue<E> {
     private final int maxSize;
     private int currSize;
@@ -8,6 +13,14 @@ public class ArrayQueue<E extends Cloneable> implements Queue<E> {
     private int rearIndex;
     private E[] ququeList;
 
+    /**
+     * ArrayQueue constructor, throws unchecked error when the queue size is negative.
+     * saves all queue details.
+     * frontIndex - saves the index of the first item in the queue.
+     * rearindex - saves the index of the last item in the queue.
+     *
+     * @param maxSize max size of queue
+     */
     public ArrayQueue(int maxSize) {
         if (maxSize < 0)
             throw new NegativeCapacityException("Negative capacity!");
@@ -19,6 +32,12 @@ public class ArrayQueue<E extends Cloneable> implements Queue<E> {
 
     }
 
+    /**
+     * add new item of type E to the arrayQueue. throws unchecked error if the array is out of bounds.
+     * add it to the end of the list using the rearIndex, calculating the new rearIndex using modulo and update it.
+     *
+     * @param element the new element to add to the queue
+     */
     @Override
     public void enqueue(E element) {
         if (this.currSize == this.maxSize)
@@ -28,6 +47,12 @@ public class ArrayQueue<E extends Cloneable> implements Queue<E> {
         this.currSize++;
     }
 
+    /**
+     * remove an item of type E from the arrayQueue. throws unchecked error if the array is empty.
+     * calculating the new frontIndex using modulo and update it.
+     *
+     * @return the first (entered) item in the queue
+     */
     @Override
     public E dequeue() {
         if (this.currSize == 0)
@@ -39,6 +64,11 @@ public class ArrayQueue<E extends Cloneable> implements Queue<E> {
         return returnedElement;
     }
 
+    /**
+     * throws unchecked error if the array is empty.
+     *
+     * @return the first (entered) item in the queue
+     */
     @Override
     public E peek() {
         if (this.currSize == 0)
@@ -46,21 +76,33 @@ public class ArrayQueue<E extends Cloneable> implements Queue<E> {
         return this.ququeList[this.frontIndex];
     }
 
+    /**
+     * @return queue size
+     */
     @Override
     public int size() {
         return this.currSize;
     }
 
+    /**
+     * @return true if queue is empty and false otherwise.
+     */
     @Override
     public boolean isEmpty() {
         return this.currSize == 0;
     }
 
+    /**
+     * deep cloning of this array using covariant return type.
+     * use invoke to get the clone method of element of type E, and surpass its private access.
+     *
+     * @return deep cloned object
+     */
     @Override
     public ArrayQueue<E> clone() {
         try {
             ArrayQueue<E> returnedQueue = (ArrayQueue<E>) super.clone();
-            returnedQueue.ququeList =  (E[]) new Cloneable[maxSize];
+            returnedQueue.ququeList = (E[]) new Cloneable[maxSize];
             Method cloneM = this.ququeList[this.frontIndex].getClass().getMethod("clone");
             E element;
             for (int i = 0; i < this.maxSize; i++) {
@@ -76,6 +118,9 @@ public class ArrayQueue<E extends Cloneable> implements Queue<E> {
         }
     }
 
+    /**
+     * @return iterator of arrayQueue
+     */
     @Override
     public Iterator<E> iterator() {
         return new ArrayQueueIterator<>(this.ququeList, this.frontIndex, this.maxSize, this.currSize);

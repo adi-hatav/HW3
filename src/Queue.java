@@ -1,3 +1,7 @@
+/**
+ * Queue interface extends iterable.
+ * @param <E> generic element extends cloneable
+ */
 public interface Queue<E extends Cloneable> extends Iterable<E>, Cloneable {
     void enqueue(E element);
     E dequeue();
