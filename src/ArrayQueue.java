@@ -103,6 +103,8 @@ public class ArrayQueue<E extends Cloneable> implements Queue<E> {
         try {
             ArrayQueue<E> returnedQueue = (ArrayQueue<E>) super.clone();
             returnedQueue.ququeList = (E[]) new Cloneable[maxSize];
+            if (this.currSize==0)
+                return returnedQueue;
             Method cloneM = this.ququeList[this.frontIndex].getClass().getMethod("clone");
             E element;
             for (int i = 0; i < this.maxSize; i++) {
