@@ -33,10 +33,11 @@ public class ToDoList implements Cloneable, TaskIterable {
     }
 
     /**
-     * add new task to list. throws TaskAlreadyExistsException if the task already exist in list.
+     * add new task to list.
      * add new task to sorted list in correct place based on its date and description.
      *
      * @param task the new task to add
+     * @throws TaskAlreadyExistsException if the task already exist in list.
      */
     public void addTask(Task task) {
         if (checkAppearance(task)) {
